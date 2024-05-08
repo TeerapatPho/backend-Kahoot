@@ -13,6 +13,7 @@ const createRoom = async (req, res) => {
       max_player: data.max_player,
       quiz_id: req.params.quiz_id,
       players: [],
+      time_limit: Number,
     }
 
     const room = await RoomModel.create(room_data);

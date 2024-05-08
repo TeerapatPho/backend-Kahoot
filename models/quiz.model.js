@@ -24,7 +24,6 @@ const Quiz = new Schema({
   tag: { type: Schema.Types.ObjectId, ref: 'RelatedQuizzes' },
   disabled: { type: Boolean, default: false },
   createdAt: Date,
-  time_limit: Number,
 })
 
 const RelatedQuiz = new Schema({
