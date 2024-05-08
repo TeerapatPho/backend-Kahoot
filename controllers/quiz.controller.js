@@ -106,6 +106,7 @@ const updateQuiz = async (req, res) => {
         tag: quiz.tag,
         disabled: false,
         createdAt: quiz.createdAt,
+        time_limit: data.quiz.time_limit,
       }
 
       const new_quiz = await QuizModel.create(quiz_data);
@@ -123,6 +124,7 @@ const updateQuiz = async (req, res) => {
       const quiz_data = {
         quiz_name: data.quiz.quiz_name,
         questions: data.quiz.questions,
+        time_limit: data.quiz.time_limit,
       }
 
       const new_quiz = await QuizModel.findByIdAndUpdate(req.params.quiz_id, quiz_data);

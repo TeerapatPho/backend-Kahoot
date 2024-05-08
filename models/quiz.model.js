@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Image = new Schema({
-  filename: String,
-  base64: String,
+const Answer = new Schema({
+  value: String,
 })
 
 const Question = new Schema({
@@ -12,9 +11,8 @@ const Question = new Schema({
     enum: ['Choices', 'True & False', 'Short Answer']
   },
   question: String,
-  choices: String,
-  answer: String,
-  image: Image,
+  choices: [Answer],
+  answer: Answer,
 })
 
 const Quiz = new Schema({
