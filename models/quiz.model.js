@@ -8,7 +8,7 @@ const Answer = new Schema({
 const Question = new Schema({
   type: {
     type: String,
-    enum: ['Choices', 'True & False', 'Short Answer']
+    enum: ['Choices', 'True-False', 'Short Answer']
   },
   question: String,
   choices: [Answer],
