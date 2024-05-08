@@ -1,0 +1,19 @@
+version: "1"
+services:
+  backend-app:
+    image: fankrbb/backend-kahoot
+    ports:
+      - "3000:3000"
+    networks:
+      - my-app
+    depends_on:
+      - db
+  db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - my-app
+networks:
+  my-app:
+    driver: bridge
