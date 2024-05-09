@@ -13,16 +13,17 @@ router.get('/', verifyFirebaseToken, getAllRooms);
 // get one rooms
 router.get('/:room_id', function (req, res, next) {
   if (req.query.source === 'frontend') {
-    verifyFirebaseToken(req, res, next);
+    next()
   } else if (req.query.source === 'websocket') {
-    verifyWebsocketToken(req, res, next);
+    next("route")
   } else {
     return res.status(401).json({
       success: false,
       message: "Doesn't put the 'source' in query"
     })
   }
-}, getOneRoom);
+}, verifyFirebaseToken, getOneRoom);
+router.get('/:room_id', verifyWebsocketToken, getOneRoom);
 
 
 // join room
