@@ -26,7 +26,7 @@ async function main() {
   const roomRouter = require('./routes/record.route');
 
   app.use('/api/quizzes', verifyFirebaseToken, quizRouter);
-  app.use('/api/rooms', verifyFirebaseToken, roomRouter);
+  app.use('/api/records', verifyFirebaseToken, roomRouter);
 
   app.listen(3000, () => {
     console.log("connecting to port: 3000");
