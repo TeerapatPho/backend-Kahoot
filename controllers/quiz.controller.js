@@ -1,4 +1,5 @@
-const { QuizModel, RelatedQuizModel, } = require('../models/quiz.model');
+const { QuizModel, RelatedQuizModel } = require('../models/quiz.model');
+const RecordModel = require('../models/record.model');
 
 const getAllQuiz = async (req, res) => {
   const quizzes = await QuizModel.find({ owner_id: req.user_id, disabled: false });
@@ -62,12 +63,12 @@ const createQuiz = async (req, res) => {
   const quiz_data = {
     quiz_name: data.quiz_name,
     questions: [],
-    no_session: 0,
-    updated_on: 0,
+    using: false,
     owner_id: req.user_id,
     tag: tag_obj._id,
     disabled: false,
     createdAt: new Date(),
+    time_limit: 60,
   }
 
   const quiz = await QuizModel.create(quiz_data);
@@ -92,19 +93,19 @@ const updateQuiz = async (req, res) => {
       return res.status(404).json({ success: false, message: "Quiz not found" });
     }
 
-    if (quiz.updated_on != quiz.no_session) {
+    if (quiz.using) {
       quiz.disabled = true;
       quiz.save();
 
       const quiz_data = {
         quiz_name: data.quiz.quiz_name,
         questions: data.quiz.questions,
-        no_session: quiz.no_session,
-        updated_on: quiz.no_session,
+        using: false,
         owner_id: quiz.owner_id,
         tag: quiz.tag,
         disabled: false,
         createdAt: quiz.createdAt,
+        time_limit: data.time_limit,
       }
 
       const new_quiz = await QuizModel.create(quiz_data);
@@ -119,16 +120,15 @@ const updateQuiz = async (req, res) => {
         quiz: new_quiz,
       });
     } else {
-      const quiz_data = {
-        quiz_name: data.quiz.quiz_name,
-        questions: data.quiz.questions,
-      }
+      quiz.quiz_name = data.quiz.quiz_name
+      quiz.questions = data.quiz.questions
+      quiz.time_limit = data.quiz.time_limit
 
-      const new_quiz = await QuizModel.findByIdAndUpdate(req.params.quiz_id, quiz_data);
+      await quiz.save();
 
       return res.status(200).json({
         success: true,
-        quiz: new_quiz,
+        quiz: quiz,
       });
     }
   } catch (error) {
@@ -156,6 +156,8 @@ const deleteQuiz = async (req, res) => {
     }
     
     const result = await tag_obj.deleteOne().exec();
+
+    await RecordModel.deleteMany({quiz: req.params.quiz_id}).exec();
 
     return res.status(200).json({
       success: true,

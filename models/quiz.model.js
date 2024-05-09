@@ -18,12 +18,12 @@ const Question = new Schema({
 const Quiz = new Schema({
   quiz_name: String,
   questions: [Question],
-  no_session: Number,
-  updated_on: Number,
+  using: Boolean,
   owner_id: String,
   tag: { type: Schema.Types.ObjectId, ref: 'RelatedQuizzes' },
   disabled: { type: Boolean, default: false },
   createdAt: Date,
+  time_limit: Number
 })
 
 const RelatedQuiz = new Schema({

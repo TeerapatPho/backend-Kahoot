@@ -15,18 +15,18 @@ async function main() {
   await mongoose.connect(`mongodb://${process.env.DB_URI}/${process.env.DB_Name}`);
 
   const QuizModel = require('./models/quiz.model')
-  const RoomModel = require('./models/room.model')
+  const RoomModel = require('./models/record.model')
 
   app.get("/", (req, res) => {
     res.status(200).send("connected backend successfully!");
   });
 
-  const { verifyFirebaseToken } = require('./middlewares/auth.middleware');
+  const verifyFirebaseToken = require('./middlewares/auth.middleware');
   const quizRouter = require('./routes/quiz.route');
-  const roomRouter = require('./routes/room.route');
+  const roomRouter = require('./routes/record.route');
 
   app.use('/api/quizzes', verifyFirebaseToken, quizRouter);
-  app.use('/api/rooms', roomRouter);
+  app.use('/api/rooms', verifyFirebaseToken, roomRouter);
 
   app.listen(3000, () => {
     console.log("connecting to port: 3000");
