@@ -67,6 +67,25 @@ const getOneRoom = async (req, res) => {
   }
 }
 
+const getOneRoomByPin = async (req, res) => {
+  try {
+    const room = await RoomModel.findOne({
+      room_pin: req.params.room_pin,
+      room_status: { room_status: { $in: ['waiting', 'started'] } }
+    })
+      .populate('quiz')
+      .exec();
+
+    return res.status(200).json({
+      success: true,
+      room: room,
+    })
+  } catch (error) {
+    console.error("Error on retrieving room:", error);
+    return res.status(500).json({ success: false, message: "Error on retrieving room" });
+  }
+}
+
 const joinRoom = async (req, res) => {
   const user_id = req.body.data.user_id;
 
@@ -213,6 +232,7 @@ module.exports = {
   createRoom,
   getAllRooms,
   getOneRoom,
+  getOneRoomByPin,
   joinRoom,
   startRoom,
   recieveAnswer,

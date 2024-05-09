@@ -1,5 +1,5 @@
 const express = require('express');
-const { createRoom, getAllRooms, joinRoom, terminateRoom, startRoom, recieveAnswer, getOneRoom } = require('../controllers/room.controller');
+const { createRoom, getAllRooms, joinRoom, terminateRoom, startRoom, recieveAnswer, getOneRoom, getOneRoomByPin } = require('../controllers/room.controller');
 const { verifyFirebaseToken, verifyWebsocketToken } = require('../middlewares/auth.middleware')
 
 const router = express.Router()
@@ -10,9 +10,10 @@ router.post('/:quiz_id', verifyFirebaseToken, createRoom);
 // get all rooms
 router.get('/', verifyFirebaseToken, getAllRooms);
 
-// get one rooms
+// get one room
 router.get('/frontend/:room_id', verifyFirebaseToken, getOneRoom);
 router.get('/websocket/:room_id', verifyWebsocketToken, getOneRoom);
+router.get('/pin/:room_pin', verifyFirebaseToken, getOneRoomByPin);
 
 // join room
 router.patch('/:room_pin', verifyWebsocketToken, joinRoom);
