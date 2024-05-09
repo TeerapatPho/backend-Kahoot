@@ -71,7 +71,7 @@ const getOneRoomByPin = async (req, res) => {
   try {
     const room = await RoomModel.findOne({
       room_pin: req.params.room_pin,
-      room_status: { room_status: { $in: ['waiting', 'started'] } }
+      room_status: { $in: ['waiting', 'started'] } 
     })
       .populate('quiz')
       .exec();
