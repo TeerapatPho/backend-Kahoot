@@ -15,7 +15,7 @@ async function main() {
   await mongoose.connect(`mongodb://${process.env.DB_URI}/${process.env.DB_Name}`);
 
   const QuizModel = require('./models/quiz.model')
-  const RoomModel = require('./models/quiz.model')
+  const RoomModel = require('./models/room.model')
 
   app.get("/", (req, res) => {
     res.status(200).send("connected backend successfully!");

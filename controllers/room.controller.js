@@ -7,13 +7,12 @@ const createRoom = async (req, res) => {
     const room_data = {
       room_status: 'waiting',
       room_pin: await generateUniquePin(),
-      room_mode: data.room_mode,
       start_time: null,
       end_time: null,
       max_player: data.max_player,
       quiz_id: req.params.quiz_id,
       players: [],
-      time_limit: Number,
+      time_limit: data.time_limit,
     }
 
     const room = await RoomModel.create(room_data);

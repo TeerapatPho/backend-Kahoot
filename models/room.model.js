@@ -15,12 +15,12 @@ const Player = new Schema({
 const Room = new Schema({
   room_status: { type: String, enum: ['waiting', 'started', 'terminated'] },
   room_pin: String,
-  room_mode: { type: String, enum: ['guest', 'authenticate'] },
   start_time: Date,
   end_time: Date,
   max_player: Number,
   quiz_id: { type: Schema.Types.ObjectId, ref: 'Quizzes' },
   players: [Player],
+  time_limit: Number,
 })
 
 module.exports = mongoose.model("Rooms", Room);
