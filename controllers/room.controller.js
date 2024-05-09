@@ -1,4 +1,5 @@
 const RoomModel = require('../models/room.model')
+const QuizModel = require('../models/quiz.model')
 
 const createRoom = async (req, res) => {
   const data = req.body.data;
@@ -43,8 +44,27 @@ const getAllRooms = async (req, res) => {
       rooms: rooms,
     })
   } catch (error) {
-    console.error("Error on joining room:", error);
-    return res.status(500).json({ success: false, message: "Error on joining room" });
+    console.error("Error on retrieving rooms:", error);
+    return res.status(500).json({ success: false, message: "Error on retrieving rooms" });
+  }
+}
+
+const getOneRoom = async (req, res) => {
+  try {
+    const room = await RoomModel.findOne({
+      _id: req.params.room_id,
+    })
+      .populate({
+        path: 'quiz',
+      })
+      .exec();
+    return res.status(200).json({
+      success: true,
+      room: room,
+    })
+  } catch (error) {
+    console.error("Error on retrieving room:", error);
+    return res.status(500).json({ success: false, message: "Error on retrieving room" });
   }
 }
 
@@ -52,7 +72,7 @@ const joinRoom = async (req, res) => {
   const user_id = req.user_id;
 
   try {
-    const room = await RoomModel.findOne({ room_pin: req.params.room_pin, room_status: 'waiting'}).exec();
+    const room = await RoomModel.findOne({ room_pin: req.params.room_pin, room_status: 'waiting' }).exec();
 
     if (!room) {
       return res.status(404).json({ success: false, message: "Room not found" });
@@ -66,7 +86,7 @@ const joinRoom = async (req, res) => {
       return res.status(400).json({ success: false, message: "Player already in the room" });
     }
 
-    room.players.push({user_id: user_id, results: []});
+    room.players.push({ user_id: user_id, results: [] });
     await room.save();
 
     return res.status(200).json({
@@ -91,6 +111,15 @@ const startRoom = async (req, res) => {
     room.start_time = Date.now();
     await room.save();
 
+    const quiz = await QuizModel.findOne({ _id: room.quiz }).exec();
+
+    if (!quiz) {
+      return res.status(404).json({ success: false, message: "Quiz not found" });
+    }
+
+    quiz.no_session = quiz.no_session + 1;
+    await quiz.save();
+
     return res.status(200).json({
       success: true,
       room: room,
@@ -98,6 +127,41 @@ const startRoom = async (req, res) => {
   } catch (error) {
     console.error("Error on starting room:", error);
     return res.status(500).json({ success: false, message: "Error on starting room" });
+  }
+}
+
+const recieveAnswer = async (req, res) => {
+  const data = req.body.data;
+
+  try {
+    const room = await RoomModel.findOne({ _id: req.params.room_id, room_status: 'started' }).exec();
+
+    if (!room) {
+      return res.status(404).json({ success: false, message: "Room not found" });
+    }
+
+    const players = room.players;
+
+    // Iterate through each data entry
+    data.forEach(dataEntry => {
+      // Find the player with matching user_id
+      const player = players.find(player => player.user_id === dataEntry.user_id);
+      if (player) {
+        // Push the relevant data into the player's result array
+        const { user_id, ...rest } = dataEntry; // Exclude user_id from the data
+        player.result.push(rest);
+      }
+    });
+
+    await room.save();
+
+    return res.status(200).json({
+      success: true,
+      room: room,
+    });
+  } catch (error) {
+    console.error("Error while recieving answer:", error);
+    return res.status(500).json({ success: false, message: "Error while recieving answer" });
   }
 }
 
@@ -149,7 +213,9 @@ async function generateUniquePin() {
 module.exports = {
   createRoom,
   getAllRooms,
+  getOneRoom,
   joinRoom,
   startRoom,
+  recieveAnswer,
   terminateRoom,
 }

@@ -21,12 +21,12 @@ async function main() {
     res.status(200).send("connected backend successfully!");
   });
 
-  const verifyFirebaseToken = require('./middlewares/auth.middleware');
+  const { verifyFirebaseToken } = require('./middlewares/auth.middleware');
   const quizRouter = require('./routes/quiz.route');
   const roomRouter = require('./routes/room.route');
 
   app.use('/api/quizzes', verifyFirebaseToken, quizRouter);
-  app.use('/api/rooms', verifyFirebaseToken, roomRouter);
+  app.use('/api/rooms', roomRouter);
 
   app.listen(3000, () => {
     console.log("connecting to port: 3000");

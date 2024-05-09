@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const Result = new Schema({
   answer: String,
-  correct: String,
+  correct: Boolean,
   time_usage: Number
 })
 
