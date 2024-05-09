@@ -76,6 +76,8 @@ const createQuiz = async (req, res) => {
   tag_obj.quizzes.push(quiz._id);
   await tag_obj.save();
 
+  const record_obj = await RelatedQuizModel.create({quiz: quiz_id, players: []});
+
   return res.status(200).json({
     success: true,
     quiz: quiz,
@@ -88,7 +90,6 @@ const updateQuiz = async (req, res) => {
   try {
     const quiz = await QuizModel.findOne({ _id: req.params.quiz_id, owner_id: req.user_id, disabled: false }).exec();
     
-    // todo: check for replicate name in
     if (!quiz) {
       return res.status(404).json({ success: false, message: "Quiz not found" });
     }
@@ -114,6 +115,8 @@ const updateQuiz = async (req, res) => {
       
       tag_obj.quizzes.push(new_quiz._id);
       await tag_obj.save();
+
+      const new_record = await RecordModel.create({quiz: new_quiz._id, players: []});
 
       return res.status(200).json({
         success: true,

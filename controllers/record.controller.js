@@ -5,7 +5,7 @@ const getAllRecord = async (req, res) => {
   const user_id = req.user_id;
 
   try {
-    const records = await RecordModel.find({ players: { $elemMatch: { user_id: user_id } }, disabled: false })
+    const records = await RecordModel.find({ players: { $elemMatch: { user_id: user_id } } })
       .populate('quiz')
       .exec();
     return res.status(200).json({
@@ -41,7 +41,7 @@ const appendRecord = async (req, res) => {
   const data = req.body.data;
 
   try {
-    const record = await RecordModel.findOne({ quiz: req.params.quiz_id, disabled: false }).exec();
+    const record = await RecordModel.findOne({ quiz: req.params.quiz_id }).exec();
 
     if (!record) {
       return res.status(404).json({ success: false, message: "Record not found" });
