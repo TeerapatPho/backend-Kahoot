@@ -34,7 +34,7 @@ const getAllRooms = async (req, res) => {
     const rooms = await RoomModel.find()
       .populate({
         path: 'quiz',
-        match: { owner_id: userId } // Filtering quizzes by owner_id
+        match: { owner_id: user_id } // Filtering quizzes by owner_id
       })
       .exec();
     return res.status(200).json({
