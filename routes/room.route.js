@@ -8,23 +8,11 @@ const router = express.Router()
 router.post('/:quiz_id', verifyFirebaseToken, createRoom);
 
 // get all rooms
-router.get('/get', verifyFirebaseToken, getAllRooms);
+router.get('/', verifyFirebaseToken, getAllRooms);
 
 // get one rooms
-router.get('/get/:room_id', function (req, res, next) {
-  if (req.query.source === 'frontend') {
-    next()
-  } else if (req.query.source === 'websocket') {
-    next("route")
-  } else {
-    return res.status(401).json({
-      success: false,
-      message: "Doesn't put the 'source' in query"
-    })
-  }
-}, verifyFirebaseToken, getOneRoom);
-router.get('/get/:room_id', verifyWebsocketToken, getOneRoom);
-
+router.get('/frontend/:room_id', verifyFirebaseToken, getOneRoom);
+router.get('/websocket/:room_id', verifyWebsocketToken, getOneRoom);
 
 // join room
 router.patch('/:room_pin', verifyWebsocketToken, joinRoom);
