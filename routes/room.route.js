@@ -32,7 +32,7 @@ router.patch('/:room_pin', verifyWebsocketToken, joinRoom);
 router.patch('/start/:room_id', verifyWebsocketToken, startRoom);
 
 // send answer
-router.put('start/:room_id', verifyWebsocketToken, recieveAnswer);
+router.put('/start/:room_id', verifyWebsocketToken, recieveAnswer);
 
 // terminate room
 router.patch('/terminate/:room_id', verifyWebsocketToken, terminateRoom);
