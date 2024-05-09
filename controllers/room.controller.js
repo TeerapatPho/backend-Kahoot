@@ -51,7 +51,6 @@ const getAllRooms = async (req, res) => {
 
 const getOneRoom = async (req, res) => {
   try {
-    console.log(req.params.room_id)
     const room = await RoomModel.findOne({
       _id: req.params.room_id,
     })
@@ -69,7 +68,7 @@ const getOneRoom = async (req, res) => {
 }
 
 const joinRoom = async (req, res) => {
-  const user_id = req.user_id;
+  const user_id = req.body.data.user_id;
 
   try {
     const room = await RoomModel.findOne({ room_pin: req.params.room_pin, room_status: 'waiting' }).exec();
