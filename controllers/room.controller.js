@@ -10,7 +10,7 @@ const createRoom = async (req, res) => {
       start_time: null,
       end_time: null,
       max_player: data.max_player,
-      quiz_id: req.params.quiz_id,
+      quiz: req.params.quiz_id,
       players: [],
       time_limit: data.time_limit,
     }
@@ -27,11 +27,32 @@ const createRoom = async (req, res) => {
   }
 }
 
+const getAllRooms = async (req, res) => {
+  const user_id = req.user_id;
+
+  try {
+    const rooms = await RoomModel.find()
+      .populate({
+        path: 'quiz',
+        match: { owner_id: userId } // Filtering quizzes by owner_id
+      })
+      .exec();
+    return res.status(200).json({
+      success: true,
+      found: rooms.length,
+      rooms: rooms,
+    })
+  } catch (error) {
+    console.error("Error on joining room:", error);
+    return res.status(500).json({ success: false, message: "Error on joining room" });
+  }
+}
+
 const joinRoom = async (req, res) => {
   const user_id = req.user_id;
 
   try {
-    const room = await RoomModel.findOne({ room_pin: req.params.room_pin, room_status: 'waiting', room_mode: req.query.method }).exec();
+    const room = await RoomModel.findOne({ room_pin: req.params.room_pin, room_status: 'waiting'}).exec();
 
     if (!room) {
       return res.status(404).json({ success: false, message: "Room not found" });
@@ -127,6 +148,7 @@ async function generateUniquePin() {
 
 module.exports = {
   createRoom,
+  getAllRooms,
   joinRoom,
   startRoom,
   terminateRoom,

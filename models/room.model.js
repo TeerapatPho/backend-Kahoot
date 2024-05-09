@@ -18,7 +18,7 @@ const Room = new Schema({
   start_time: Date,
   end_time: Date,
   max_player: Number,
-  quiz_id: { type: Schema.Types.ObjectId, ref: 'Quizzes' },
+  quiz: { type: Schema.Types.ObjectId, ref: 'Quizzes' },
   players: [Player],
   time_limit: Number,
 })
