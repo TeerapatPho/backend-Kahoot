@@ -51,13 +51,13 @@ const getAllRooms = async (req, res) => {
 
 const getOneRoom = async (req, res) => {
   try {
+    console.log(req.params.room_id)
     const room = await RoomModel.findOne({
       _id: req.params.room_id,
     })
-      .populate({
-        path: 'quiz',
-      })
+      .populate('quiz')
       .exec();
+
     return res.status(200).json({
       success: true,
       room: room,
