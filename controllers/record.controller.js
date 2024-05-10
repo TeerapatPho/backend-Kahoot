@@ -49,11 +49,16 @@ const appendRecord = async (req, res) => {
 
     const players = record.players;
 
-    for (let i = 0; i < players.length; i++) {
+    var i = 0
+    for (; i < players.length; i++) {
       if (players[i].user_id === req.user_id) {
         players[i].results = data.results;
         break;
       }
+    }
+    
+    if (i == players.length) {
+      players.push({user_id: req.user_id, results: data.results})
     }
 
     await record.save();
