@@ -76,7 +76,7 @@ const createQuiz = async (req, res) => {
   tag_obj.quizzes.push(quiz._id);
   await tag_obj.save();
 
-  const record_obj = await RelatedQuizModel.create({quiz: quiz_id, players: []});
+  const record_obj = await RelatedQuizModel.create({quiz: quiz._id, players: []});
 
   return res.status(200).json({
     success: true,
