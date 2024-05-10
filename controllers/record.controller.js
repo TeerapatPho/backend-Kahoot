@@ -22,7 +22,7 @@ const getAllRecord = async (req, res) => {
 const getOneRecord = async (req, res) => {
   try {
     const record = await RecordModel.findOne({
-      _id: req.params.record_id,
+      quiz: req.params.quiz_id,
     })
       .populate('quiz')
       .exec();
@@ -78,7 +78,7 @@ const appendRecord = async (req, res) => {
 const deleteMyRecord = async (req, res) => {
   
   try {
-    const record = await RecordModel.findOne({_id: req.params.quiz_id }).exec();
+    const record = await RecordModel.findOne({quiz: req.params.quiz_id }).exec();
 
     if (!record) {
       return res.status(404).json({ success: false, message: "Record not found" });

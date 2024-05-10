@@ -5,10 +5,10 @@ const router = express.Router()
 
 router.get('/', getAllRecord);
 
-router.get('/:record_id', getOneRecord);
+router.get('/:quiz_id', getOneRecord);
 
-router.patch('/:record_id', appendRecord);
+router.patch('/:quiz_id', appendRecord);
 
-router.delete('/:record_id', deleteMyRecord);
+router.delete('/:quiz_id', deleteMyRecord);
 
 module.exports = router;
