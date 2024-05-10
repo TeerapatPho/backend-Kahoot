@@ -7,7 +7,7 @@ router.get('/', getAllRecord);
 
 router.get('/:quiz_id', getOneRecord);
 
-router.patch('/:quiz_id', appendRecord);
+router.put('/:quiz_id', appendRecord);
 
 router.delete('/:quiz_id', deleteMyRecord);
 
